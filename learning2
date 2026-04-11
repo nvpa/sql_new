@@ -1,0 +1,91 @@
+--cumulative spend customer per ,month
+Select customer_id, month, sum(spend) Over Partition_by customer_id
+order_by month)as cum_month
+from monthly_spend
+
+--gaps by sequential dates
+select customer_id, month, spend,
+lag(month) over (partition by customer_id order by month) as prev_month,   
+lead(month) over (partition by customer_id order by month) as next_month
+from monthly_spend
+
+select lag(date) over (order by date) as prev_date,
+date-lag(date) over (order by date) as gap
+from events
+
+
+
+
+--find and last transaction per user
+select customer_id, transaction_date,
+row_number() over (partition by customer_id order by transaction_date) as rn
+from transactions
+where rn = 1 --first transaction
+or rn = 2 --last transaction
+--unique and not null values
+create table users(
+    user_id int primary key,
+    email varchar(255) unique not null,
+    phone varchar(20) unique not null
+) 
+--cretae tabel with id and age and email but age must be greater than 18 country
+create table users(
+    user_id int primary key,
+    age int check (age > 18),
+    email varchar(255) unique not null,
+    country varchar(50) default 'india'
+)
+
+--primary key is the column that uniquely identifies each row in the table 
+--foreign key is the column that references the primary key of another table
+--create table with primary key and foreign key 
+create table orders(
+    order_id int primary key,
+    user_id int,
+    order_date date,
+    amount decimal(10,2),
+    foreign key (user_id) references users(user_id)
+)
+--create a table department and student with foreign key
+create table department(
+    department_id int primary key,
+    department_name varchar(50) unique not null
+)
+create table student(
+    student_id int primary key,
+    student_name varchar(50) not null,
+    department_id int,
+    foreign key (department_id) references department(department_id)
+)
+--find  users with 3 consecutive login days
+select user_id, login_date,
+row_number() over (partition by user_id order by login_date) as rn  
+from logins
+where rn = 1 --first login  
+or rn = 2 --second login
+or rn = 3 --third login
+
+--find users with 3 consecutive login days using gaps and islands
+WITH cte AS (
+  SELECT *,
+         date_sub(login_date, 
+                  ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date)) AS grp
+  FROM logins
+)
+SELECT user_id
+FROM cte
+GROUP BY user_id, grp
+HAVING COUNT(*) >= 3;
+
+--find missing numbers in a sequence
+SELECT id + 1 AS missing_id
+FROM numbers
+EXCEPT
+SELECT id FROM numbers;
+
+
+
+
+
+
+

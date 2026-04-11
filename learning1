@@ -1,0 +1,65 @@
+-- How to create database 
+
+CREATE DATABASE Employee;
+
+-- how to use database 
+
+USE Employee;
+
+--how to delete database
+DROP DATABASE Employee;
+
+-- how to create table
+CREATE TABLE Employee_Details(
+    Employee_ID INT PRIMARY KEY,
+    Employee_Name VARCHAR(50),
+    Employee_Age INT,
+    Employee_Department VARCHAR(50)
+);
+
+--Insert data into table
+INSERT INTO Employee_Details (Employee_ID, Employee_Name, Employee_Age, Employee_Department)
+VALUES (1, 'John Doe', 30, 'IT'),
+       (2, 'Jane Smith', 25, 'HR'),
+       (3, 'Bob Johnson', 35, 'Finance');
+--Select data from table
+SELECT * FROM Employee_Details; 
+--Update data in table
+UPDATE Employee_Details SET Employee_Age = 31 WHERE Employee_ID = 1;
+--Delete data from table
+DELETE FROM Employee_Details WHERE Employee_ID = 2;
+--Select data from table after update and delete
+SELECT * FROM Employee_Details; 
+--how to insert few records in table
+INSERT INTO Employee_Details (Employee_ID, Employee_Name, Employee_Age, Employee_Department)
+VALUES (4, 'Alice Brown', 28, 'Marketing'),
+       (5, 'Charlie Davis', 32, 'Sales');       
+
+--How to insert specific columns from table
+INSERT INTO Employee_Details (Employee_ID, Employee_Name)
+VALUES (6, 'David Wilson');
+--Select specific columns from table
+SELECT Employee_ID, Employee_Name FROM Employee_Details;        
+--How to insert data from another table
+CREATE TABLE Employee_Salary(
+    Employee_ID INT PRIMARY KEY,
+    Salary INT
+);  
+INSERT INTO Employee_Salary (Employee_ID, Salary)
+VALUES (1, 50000),  
+       (3, 60000),  
+       (4, 55000),  
+       (5, 52000);      
+
+INSERT INTO Employee_Details (Employee_ID, Employee_Name, Employee_Age, Employee_Department)
+SELECT Employee_ID, Employee_Name, Employee_Age, Employee_Department FROM Employee_Salary;   
+--Select data from table after inserting data from another table
+SELECT * FROM Employee_Details; 
+
+--delete vs trucnate vs drop
+--Delete: Deletes specific rows from a table based on a condition. It can be rolled back and does not reset the identity of the table.
+DELETE FROM Employee_Details WHERE Employee_ID = 6; 
+--Truncate: Deletes all rows from a table and resets the identity of the table. It cannot be rolled back.
+TRUNCATE TABLE Employee_Details;        
+--Drop: Deletes the entire table structure and all its data. It cannot be rolled back.
+DROP TABLE Employee_Details;
