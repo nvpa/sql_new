@@ -26,6 +26,17 @@ VALUES (1, 'John Doe', 30, 'IT'),
 SELECT * FROM Employee_Details; 
 --Update data in table
 UPDATE Employee_Details SET Employee_Age = 31 WHERE Employee_ID = 1;
+
+-- update multiple columns in table
+UPDATE Employee_Details SET Employee_Age = 26, Employee_Department = 'Operations' WHERE Employee_ID = 2;
+--Select data from table after update
+SELECT * FROM Employee_Details WHERE Employee_ID = 2;
+
+--update data in table for multiple employees
+UPDATE Employee_Details SET Employee_Department = 'Management' WHERE Employee_Age > 30;
+--Select data from table after update   
+SELECT * FROM Employee_Details;
+
 --Delete data from table
 DELETE FROM Employee_Details WHERE Employee_ID = 2;
 --Select data from table after update and delete

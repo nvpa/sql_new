@@ -1,0 +1,33 @@
+--select from sales
+select * from sales
+--find toatl amount based on each region
+selct region, sum(amount) as total_amount
+from sales
+group by region
+--windows function
+select region, sum(amount) as total_amount,
+rank() over (partition by region order by sum(amount) desc) as amount_rank   
+from sales
+
+what is the output of the above query?The output of the above query will be a result set that includes three columns: "region", "total_amount", and "amount_rank". Each row in the result set will represent a unique region, the total amount of sales for that region, and the rank of that total amount compared to other regions. The "amount_rank" will be calculated based on the total amount of sales for each region,              
+with the highest total amount receiving a rank of 1, the second highest receiving a rank of 2, and so on. If there are multiple regions with the same total amount, they will receive the same rank, and the next rank will be skipped.For example, if the sales data includes the following regions and amounts:
+- Region A: $100
+- Region B: $200
+- Region C: $150
+The output of the query would be:
+| region   | total_amount | amount_rank |   
+|----------|--------------|-------------|
+| Region B | 200          | 1           |
+| Region C | 150          | 2           |
+| Region A | 100          | 3           |
+
+
+--min amount from sales
+select *, min(amount) over (partitioned by region) from sales
+--max amount from sales
+select * ,MAX(amount) over (partitioned by region) from sales
+--avg
+select * avg(amount) over (partitioned by region) from sales
+
+
+

@@ -1,0 +1,42 @@
+--Join ,leftjoin,Rightjoin,fulljoin
+
+select * from employees e
+join departments d on e.department_id = d.id
+
+--left join
+select * from employees e
+left join departments d on e.department_id = d.id   
+
+--right join
+select * from employees e
+right join departments d on e.department_id = d.id
+
+--full join
+select * from employees e
+full join departments d on e.department_id = d.id   
+
+--union,union all
+select name from employees
+union
+select name from departments  
+ 
+--union all 
+select name from employees
+union all   
+select name from departments
+
+--Alter
+alter table employees
+add column age int  
+alter table employees
+drop column age
+alter table employees
+modify column name varchar(100)
+alter table employees
+change column name full_name varchar(100)
+
+--windows function
+select employee_id, department_id, salary,
+rank() over (partition by department_id order by salary desc) as salary_rank
+from employees
+

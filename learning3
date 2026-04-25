@@ -1,0 +1,24 @@
+--null value replace
+
+select name , coalesce(phone, 'no phone') as phone
+from users
+--select the first available email
+select name , coalesce(email, alternate_email, 'no email') 
+from users
+
+--taotal salary+bonus
+select salary+coalesce(bonus, 0) as total_compensation
+from users
+--join
+select u.name, coalesce(p.phone, 'no phone') as phone
+from users u    
+left join phones p on u.id = p.user_id
+--group by
+select department, sum(coalesce(salary, 0)) as total_salary 
+from employees
+group by department
+--having
+select department, sum(coalesce(salary, 0)) as total_salary
+from employees
+group by department
+having sum(coalesce(salary, 0)) > 100000
