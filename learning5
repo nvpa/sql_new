@@ -1,3 +1,4 @@
+
 --select from sales
 select * from sales
 --find toatl amount based on each region
@@ -28,6 +29,31 @@ select *, min(amount) over (partitioned by region) from sales
 select * ,MAX(amount) over (partitioned by region) from sales
 --avg
 select * avg(amount) over (partitioned by region) from sales
+
+--row number rank dense rank
+ --row number give unique number 1,2,3,4,5
+selcet * , row_number()over order by salary desc from employee
+
+--any duplicate is ther assiagn same number dense rank
+salary 5000,3000,3000,2000,2000
+rank 1,2,2,3,3
+selcet * ,dense_rank()over order by salary desc from employee
+
+
+--it already assign number to befor so it skip the number rank
+salary 5000,3000,3000,2000,2000
+rank 1,2,2,4,4
+selcet * ,rank()over order by salary desc from employee
+--lead and lag
+selct *, lag(amount) over (order by transactiondate) prevamount  from sales
+
+result :1 bob 500 Null 
+        2 bob 200 500
+selct *, lead(amount) over (order by transactiondate) prevamount  from sales
+
+result :1 bob 500 200 
+        2 bob 200 0
+
 
 
 

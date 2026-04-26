@@ -1,0 +1,29 @@
+--CTE common table expressions tempory result set that can be referenced within a SELECT, INSERT, UPDATE, or DELETE statement.
+--find the rank of salary for each employee in their department
+
+
+with cte as (
+    select employee_id, department_id, salary,
+    rank() over (partition by department_id order by salary desc) as salary_rank
+    from employees
+)
+
+--Find the top 3 highest paid employees in each department
+    with cte as (
+    select employee_id, department_id, salary,      
+    row_number() over (partition by department_id order by salary desc) as rn
+    from employees
+)   
+select employee_id, department_id, salary
+from cte
+where rn <= 3   
+
+--find 3rd highest salary from each department
+with cte as (
+    select employee_id, department_id, salary,
+    row_number() over (partition by department_id order by salary desc) as rn
+    from employees
+)
+select employee_id, department_id, salary
+from cte
+where rn = 3
