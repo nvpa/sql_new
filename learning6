@@ -27,3 +27,39 @@ with cte as (
 select employee_id, department_id, salary
 from cte
 where rn = 3
+--second lowest salary from each department
+with cte as (
+    select employee_id, department_id,salary,row_number() over (partitioned by department_id order by salary asc) as rn
+ from employees)    
+
+ select * from cte where rn =2
+
+ -- find second highest with out cte
+-- Performance: Better - single scan with window function
+ select employee_id, department_id, salary  
+    from (
+        select employee_id, department_id, salary,
+        row_number() over (partition by department_id order by salary desc) as rn
+        from employees
+    ) as subquery
+    where rn = 2
+
+-- Example: Find second highest salary from all employees
+-- Returns the maximum salary that is less than the overall highest salary
+-- Performance: Slower - requires scanning table twice (two MAX() calls)
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employee
+WHERE salary < (SELECT MAX(salary) FROM Employee);
+
+-- Example: Find second highest salary from all employees using CTE
+WITH SalaryRanks AS (
+    SELECT salary,
+           RANK() OVER (ORDER BY salary DESC) AS SalaryRank
+    FROM Employee
+)   
+SELECT salary AS SecondHighestSalary
+FROM SalaryRanks
+WHERE SalaryRank = 2;
+
+
+
